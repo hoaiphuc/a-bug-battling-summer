@@ -1,32 +1,32 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleView : MonoBehaviour
 {
-    [System.Serializable]
-    struct Slot
-    {
-        public SpeciesData species;
-        public Vector2Int cell;
-    }
+    [SerializeField] StageData stage;
+    [SerializeField] List<UnitSlot> playerTeam;
 
     [SerializeField] SpriteRenderer cellPrefab;
     [SerializeField] UnitView unitPrefab;
     [SerializeField] float cellSize = 1.5f;
     [SerializeField] float gap = 1f;   // khoảng cách giữa hai bàn
-    [SerializeField] List<Slot> playerTeam;
-    [SerializeField] List<Slot> enemyTeam;
+    [SerializeField] Button startButton;
+
+    // game started => IsArranging = false => không cho kéo bọ nữa
+    public bool IsArranging { get; private set; } = true;
 
     BattleGrid grid;
     readonly List<UnitView> views = new();
 
     void Start()
     {
-        grid = new BattleGrid();
+        grid = new BattleGrid(stage.Columns, stage.Lanes);
         SpawnCells(Side.Player);
         SpawnCells(Side.Enemy);
         foreach (var s in playerTeam) SpawnUnit(s, Side.Player);
-        foreach (var s in enemyTeam) SpawnUnit(s, Side.Enemy);
+        foreach (var s in stage.Enemies) SpawnUnit(s, Side.Enemy);
+        startButton.onClick.AddListener(BeginBattle);
     }
 
     void SpawnCells(Side side)
@@ -39,7 +39,7 @@ public class BattleView : MonoBehaviour
             }
     }
 
-    void SpawnUnit(Slot slot, Side side)
+    void SpawnUnit(UnitSlot slot, Side side)
     {
         var unit = new BattleUnit(slot.species, side, slot.cell);
         if (!grid.Place(unit))
@@ -75,11 +75,18 @@ public class BattleView : MonoBehaviour
     {
         var unit = view.Unit;
         if (TryWorldToCell(unit.Side, worldPos, out var cell))
-        {
-            var other = grid.GetUnit(unit.Side, cell);
-            if (other != null) other.Cell = unit.Cell;
-            unit.Cell = cell;
-        }
+            grid.MoveOrSwap(unit, cell);
         foreach (var v in views) v.SnapToCell();
     }
+
+    void BeginBattle()
+    {
+        IsArranging = false;
+        startButton.gameObject.SetActive(false);
+
+        // Tạm thời: in thứ tự lượt. Bước sau thay bằng BattleManager chạy trận
+        foreach (var u in TurnOrder.Build(grid.Units))
+            Debug.Log($"[{u.Side}] {u.Species.DisplayName} (Tốc {u.Species.Speed}) ô {u.Cell}");
+    }
+
 }

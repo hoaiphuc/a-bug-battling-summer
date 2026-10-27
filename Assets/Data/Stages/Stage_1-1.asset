@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08e7ba7f17170d14692ddd710db9077a, type: 3}
+  m_Name: Stage_1-1
+  m_EditorClassIdentifier: Assembly-CSharp::StageData
+  <DisplayName>k__BackingField: 1-1
+  <Columns>k__BackingField: 3
+  <Lanes>k__BackingField: 3
+  <Enemies>k__BackingField:
+  - species: {fileID: 11400000, guid: 4352327d0e3d1b34799970f0501b5627, type: 2}
+    cell: {x: 0, y: 2}
+  - species: {fileID: 11400000, guid: 90749352c9fcb8d478eff1345c9305b0, type: 2}
+    cell: {x: 1, y: 2}
+  - species: {fileID: 11400000, guid: 4861faccb45b15446a09559f159f641f, type: 2}
+    cell: {x: 2, y: 2}

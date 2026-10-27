@@ -8,6 +8,7 @@ public class BattleGrid
     public int Lanes { get; }
 
     readonly List<BattleUnit> units = new();
+    public IReadOnlyList<BattleUnit> Units => units;
 
     public BattleGrid(int columns = 3, int lanes = 3)
     {
@@ -27,6 +28,14 @@ public class BattleGrid
         return true;
     }
 
+    public bool MoveOrSwap(BattleUnit unit, Vector2Int cell)
+    {
+        if (!IsInside(cell)) return false;
+        var other = GetUnit(unit.Side, cell);
+        if (other != null) other.Cell = unit.Cell;
+        unit.Cell = cell;
+        return true;
+    }
 
     //Melee
     public BattleUnit FindMeleeTarget(BattleUnit attacker)

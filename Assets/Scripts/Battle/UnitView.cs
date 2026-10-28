@@ -8,8 +8,14 @@ public class UnitView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     BattleView board;
     SpriteRenderer body;
+    Animator anim;
 
-    void Awake() => body = GetComponent<SpriteRenderer>();
+    void Awake()
+    {
+        body = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+    }
+
 
     public void Init(BattleUnit unit, BattleView board, float cellSize)
     {
@@ -19,7 +25,16 @@ public class UnitView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         body.color = unit.Species.Color;
         transform.localScale = Vector3.one * cellSize * 0.6f;
         // Tam giác mặc định chĩa lên; xoay cho mũi hướng về phía địch
-        transform.rotation = Quaternion.Euler(0, 0, unit.Side == Side.Player ? -90 : 90);
+        if (unit.Species.Animator != null)
+        {
+            anim.runtimeAnimatorController = unit.Species.Animator;
+            body.flipX = unit.Side == Side.Enemy;   // hình gốc quay mặt sang phải
+        }
+        else
+        {
+            // Tam giác mặc định chĩa lên; xoay cho mũi hướng về phía địch
+            transform.rotation = Quaternion.Euler(0, 0, unit.Side == Side.Player ? -90 : 90);
+        }
         SnapToCell();
     }
 

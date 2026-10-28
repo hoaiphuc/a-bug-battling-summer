@@ -12,4 +12,6 @@ public class SpeciesData : ScriptableObject
 
     [field: SerializeField] public SkillData Skill1 { get; private set; }
     [field: SerializeField] public SkillData Skill2 { get; private set; }
+    [field: SerializeField] public RuntimeAnimatorController Animator { get; private set; }
+
 }

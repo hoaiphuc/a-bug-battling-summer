@@ -9,6 +9,8 @@ public class BattleGrid
 
     readonly List<BattleUnit> units = new();
     public IReadOnlyList<BattleUnit> Units => units;
+    public IEnumerable<BattleUnit> Alive(Side side) =>
+         units.Where(u => u.Side == side && !u.IsOut);
 
     public BattleGrid(int columns = 3, int lanes = 3)
     {
@@ -40,7 +42,13 @@ public class BattleGrid
     //Melee
     public BattleUnit FindMeleeTarget(BattleUnit attacker)
     {
-        var targetCell = attacker.Cell + Vector2Int.right;
-        return units.FirstOrDefault(u => u.Cell == targetCell);
+        Side enemy = attacker.Side == Side.Player ? Side.Enemy : Side.Player;
+        int lane = attacker.Cell.y;
+
+        return Alive(enemy)
+            .OrderBy(u => Mathf.Abs(u.Cell.y - lane))  // làn gần nhất
+            .ThenBy(u => u.Cell.x)                     // cột trước nhất
+            .ThenBy(u => u.Cell.y)                     // hai làn cách đều thì lấy làn trên
+            .FirstOrDefault();
     }
 }

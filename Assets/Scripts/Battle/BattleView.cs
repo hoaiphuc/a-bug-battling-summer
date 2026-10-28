@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class BattleView : MonoBehaviour
 {
@@ -83,10 +84,28 @@ public class BattleView : MonoBehaviour
     {
         IsArranging = false;
         startButton.gameObject.SetActive(false);
-
-        // Tạm thời: in thứ tự lượt. Bước sau thay bằng BattleManager chạy trận
-        foreach (var u in TurnOrder.Build(grid.Units))
-            Debug.Log($"[{u.Side}] {u.Species.DisplayName} (Tốc {u.Species.Speed}) ô {u.Cell}");
+        StartCoroutine(RunBattle());
     }
+
+    IEnumerator RunBattle()
+    {
+        var battle = new BattleManager(grid);
+        while (!battle.IsOver)
+        {
+            var actor = battle.NextActor();
+            var result = battle.BasicAttack(actor);   // logic tính xong ngay
+            if (result == null) continue;
+
+            Debug.Log($"Vòng {battle.Round}: [{actor.Side}] {actor.Species.DisplayName} đánh " +
+                      $"{result.Target.Species.DisplayName} -{result.Damage}, còn {result.Target.Courage}");
+
+            yield return StartCoroutine(ViewOf(actor).PlayAttack(ViewOf(result.Target)));   // rồi mới diễn
+            yield return new WaitForSeconds(0.2f);
+        }
+        Debug.Log($"Kết thúc sau {battle.Round} vòng: {battle.Winner} thắng");
+    }
+
+    UnitView ViewOf(BattleUnit unit) => views.Find(v => v.Unit == unit);
+
 
 }

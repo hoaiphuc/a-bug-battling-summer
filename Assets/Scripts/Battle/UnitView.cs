@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 public class UnitView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -49,4 +50,37 @@ public class UnitView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         p.z = 0;
         return p;
     }
+
+    // Chạy tới trước mặt mục tiêu, đánh, rồi chạy về chỗ cũ
+    public IEnumerator PlayAttack(UnitView target)
+    {
+        Vector3 home = transform.position;
+        Vector3 dir = (home - target.transform.position).normalized;
+        Vector3 hitPos = target.transform.position + dir * 0.8f;   // dừng cách mục tiêu 0.8 đơn vị
+
+        body.sortingOrder = 2;
+        yield return StartCoroutine(MoveTo(hitPos, 0.25f));
+        target.RefreshState();                                   // kết quả hiện đúng lúc chạm
+        yield return new WaitForSeconds(0.1f);
+        yield return StartCoroutine(MoveTo(home, 0.2f));
+        body.sortingOrder = 1;
+    }
+
+    IEnumerator MoveTo(Vector3 to, float duration)
+    {
+        Vector3 from = transform.position;
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            transform.position = Vector3.Lerp(from, to, t / duration);
+            yield return null;   // chờ sang khung hình sau
+        }
+        transform.position = to;
+    }
+
+    // Tạm thời: bỏ chạy thì ẩn đi. Sau này thay bằng thanh Dũng khí và hoạt ảnh bỏ chạy
+    public void RefreshState()
+    {
+        if (Unit.IsOut) gameObject.SetActive(false);
+    }
+
 }

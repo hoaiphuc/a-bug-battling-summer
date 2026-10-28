@@ -20,4 +20,4 @@ MonoBehaviour:
   <Color>k__BackingField: {r: 1, g: 1, b: 1, a: 1}
   <Skill1>k__BackingField: {fileID: 0}
   <Skill2>k__BackingField: {fileID: 0}
-  <Animator>k__BackingField: {fileID: 0}
+  <Animator>k__BackingField: {fileID: 22100000, guid: 5179ab9386365674bbc5dabea1db2f7b, type: 2}

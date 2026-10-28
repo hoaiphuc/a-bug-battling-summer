@@ -615,11 +615,11 @@ MonoBehaviour:
     cell: {x: 0, y: 0}
   - species: {fileID: 11400000, guid: 90749352c9fcb8d478eff1345c9305b0, type: 2}
     cell: {x: 1, y: 0}
-  - species: {fileID: 11400000, guid: 4861faccb45b15446a09559f159f641f, type: 2}
+  - species: {fileID: 11400000, guid: c3f851d4a014f074293fe3a333b8a9b4, type: 2}
     cell: {x: 2, y: 0}
   cellPrefab: {fileID: 6877212315555591080, guid: 31a419049fc116d46b9d903a52003784, type: 3}
   unitPrefab: {fileID: 5715973781367325571, guid: 7403eea1b656ff04eb430d4ae9b48e31, type: 3}
-  cellSize: 1.5
+  cellSize: 2
   gap: 1
   startButton: {fileID: 526154453}
 --- !u!4 &1193079259
